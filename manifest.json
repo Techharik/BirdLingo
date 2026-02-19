@@ -1,0 +1,10 @@
+{
+    "name": "LingoFig",
+    "id": "Multi-lingual supprot for figma",
+    "editorType": [
+        "figma"
+    ],
+    "api": "1.0.0",
+    "main": "code.js",
+    "ui": "ui.html"
+}
