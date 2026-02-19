@@ -2,11 +2,60 @@
 <html>
 
 <body>
-    <h3>Frame Preview </h3>
-    <img id="preview" />
 
+    <h3>Select Language</h3>
 
-    <script type="module" src="./ui.ts"></script>
+    <button data-lang="es">Spanish</button>
+    <button data-lang="fr">French</button>
+    <button data-lang="de">German</button>
+
+    <script>
+        console.log("UI Loaded");
+
+        document.querySelectorAll("button").forEach(button => {
+            button.addEventListener("click", () => {
+
+                const lang = button.dataset.lang;
+
+                parent.postMessage(
+                    { pluginMessage: { type: "TRANSLATE_FRAME", language: lang } },
+                    "*"
+                );
+            });
+        });
+
+        window.onmessage = async (event) => {
+
+            const msg = event.data.pluginMessage;
+            if (!msg) return;
+
+            if (msg.type === "SEND_TO_BACKEND") {
+
+                try {
+
+                    const response = await fetch("http://localhost:3000/translate", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            texts: msg.texts,
+                            language: msg.language
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    parent.postMessage(
+                        { pluginMessage: { type: "TRANSLATED_TEXTS", texts: data.texts } },
+                        "*"
+                    );
+
+                } catch (err) {
+                    console.error(err);
+                    alert("Backend not running");
+                }
+            }
+        };
+    </script>
 
 </body>
 
