@@ -1,0 +1,18 @@
+{
+    "name": "BirdLingo Bridge",
+    "id": "Json translation Genraator",
+    "editorType": [
+        "figma"
+    ],
+    "api": "1.0.0",
+    "main": "Bridge.js",
+    "ui": "ui.html",
+    "networkAccess": {
+        "allowedDomains": [
+            "none"
+        ],
+        "devAllowedDomains": [
+            "http://localhost:3000"
+        ]
+    }
+}
