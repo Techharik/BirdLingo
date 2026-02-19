@@ -1,3 +1,8 @@
+import { LingoDotDevEngine } from "lingo.dev/sdk";
+
+const lingoDotDev = new LingoDotDevEngine({
+    apiKey: process.env.LINGODOTDEV_API_KEY,
+});
 
 figma.showUI(__html__, { width: 400, height: 300 });
 
@@ -32,7 +37,7 @@ async function replaceText(node: SceneNode, texts: string[] = []) {
     }
     if ("children" in node) {
         for (const child of node.children) {
-            replaceText(child, texts);
+            await replaceText(child, texts);
         }
     }
 
@@ -60,4 +65,4 @@ async function previewWithRandomText(frame: FrameNode) {
 }
 
 
-previewWithRandomText(selectedNode)
+previewWithRandomText(frame)

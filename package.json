@@ -2,5 +2,8 @@
     "devDependencies": {
         "@figma/plugin-typings": "^1.0.0",
         "typescript": "^5.0.0"
+    },
+    "dependencies": {
+        "lingo.dev": "^0.131.6"
     }
 }

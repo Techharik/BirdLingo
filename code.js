@@ -63,16 +63,24 @@ function replaceText(node_1) {
                     return [4 /*yield*/, figma.loadFontAsync(node.fontName)];
                 case 1:
                     _b.sent();
+                    console.log(node);
                     node.characters = randomWord();
                     _b.label = 2;
                 case 2:
-                    if ("children" in node) {
-                        for (_i = 0, _a = node.children; _i < _a.length; _i++) {
-                            child = _a[_i];
-                            replaceText(child, texts);
-                        }
-                    }
-                    return [2 /*return*/];
+                    if (!("children" in node)) return [3 /*break*/, 6];
+                    _i = 0, _a = node.children;
+                    _b.label = 3;
+                case 3:
+                    if (!(_i < _a.length)) return [3 /*break*/, 6];
+                    child = _a[_i];
+                    return [4 /*yield*/, replaceText(child, texts)];
+                case 4:
+                    _b.sent();
+                    _b.label = 5;
+                case 5:
+                    _i++;
+                    return [3 /*break*/, 3];
+                case 6: return [2 /*return*/];
             }
         });
     });
