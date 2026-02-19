@@ -2,19 +2,16 @@
 <html>
 
 <body>
-    <h3>Extracted Text</h3>
-    <div id="result"></div>
+    <h3>Frame Preview Image</h3>
+    <img id="preview" />
 
     <script>
         onmessage = (event) => {
             const msg = event.data.pluginMessage;
-
-            if (msg.type === "TEXT_RESULT") {
-                const container = document.getElementById("result");
-
-                container.innerHTML = msg.data
-                    .map(text => `<p>${text}</p>`)
-                    .join("");
+            console.log(event)
+            if (msg.type === "PREVIEW") {
+                document.getElementById("preview").src =
+                    "data:image/png;base64," + msg.image;
             }
         };
     </script>

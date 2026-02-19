@@ -14,21 +14,50 @@ const selectedNode = selection[0];
 if (selectedNode.type !== "FRAME") {
     figma.notify("Please select a FRAME.");
     figma.closePlugin();
+    throw new Error("Not a frame");
+
+}
+const frame = selectedNode as FrameNode;
+
+function randomWord() {
+    const words = ["Alpha", "Beta", "Gamma", "Delta"];
+    return words[Math.floor(Math.random() * words.length)];
 }
 
-function getTextNodes(node: SceneNode, texts: string[] = []) {
+async function replaceText(node: SceneNode, texts: string[] = []) {
+
     if (node.type === "TEXT") {
-        texts.push(node.characters);
+        await figma.loadFontAsync(node.fontName as FontName);
+        node.characters = randomWord();
     }
     if ("children" in node) {
         for (const child of node.children) {
-            getTextNodes(child, texts);
+            replaceText(child, texts);
         }
     }
-    return texts;
+
 }
 
-const extractedTexts = getTextNodes(selectedNode);
-figma.ui.postMessage({ type: "TEXT_RESULT", data: extractedTexts });
 
-console.log("Extracted Texts:", extractedTexts);
+async function previewWithRandomText(frame: FrameNode) {
+    const clone = frame.clone();
+
+    await replaceText(clone);
+
+    const bytes = await clone.exportAsync({
+        format: "PNG",
+        constraint: { type: "WIDTH", value: 400 }
+    });
+
+    clone.remove();
+
+    figma.ui.postMessage({
+        type: "PREVIEW",
+        image: figma.base64Encode(bytes)
+    });
+    let image = figma.base64Encode(bytes)
+    console.log(image)
+}
+
+
+previewWithRandomText(selectedNode)
