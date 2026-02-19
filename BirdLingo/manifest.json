@@ -1,12 +1,12 @@
 {
-    "name": "LingoFig",
-    "id": "Multi-lingual supprot for figma",
+    "name": "BirdLingo",
+    "id": "A localization preview system for design teams.",
     "editorType": [
         "figma"
     ],
     "api": "1.0.0",
-    "main": "dist/code.js",
-    "ui": "dist/ui.html",
+    "main": "code.js",
+    "ui": "ui.html",
     "networkAccess": {
         "allowedDomains": [
             "none"

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        /* --- Global Styles & Variables --- */
+        :root {
+            --bg-dark: #0f172a;
+            /* Dark blue header */
+            --bg-light: #ffffff;
+            /* Main body background */
+            --brand-green: #a3e635;
+            /* Brand logo text color */
+            --btn-green: #bbf7d0;
+            /* Primary button background */
+            --btn-green-hover: #86efac;
+            --border-color: #e2e8f0;
+            /* Standard border */
+            --selected-border: #84cc16;
+            /* Selected state border */
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* --- Plugin Container --- */
+        .plugin-container {
+            width: 100%;
+            /* Adapts to Figma plugin window size */
+            height: 100%;
+            background-color: var(--bg-light);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Header --- */
+        .plugin-header {
+            background-color: var(--bg-dark);
+            padding: 16px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .logo-icons {
+            font-size: 20px;
+        }
+
+        .logo-text {
+            color: var(--brand-green);
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 18px;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .close-btn:hover {
+            opacity: 1;
+        }
+
+        /* --- Main Body --- */
+        .plugin-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        /* --- Search Bar --- */
+        .search-box {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 12px 12px 36px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--text-dark);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--text-muted);
+        }
+
+        .search-box input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* --- Language Grid --- */
+        .language-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .lang-btn {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .lang-btn:hover {
+            border-color: #cbd5e1;
+            background-color: #f8fafc;
+        }
+
+        .lang-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .flag {
+            font-size: 16px;
+        }
+
+        .lang-name {
+            font-size: 14px;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        /* Selected State */
+        .lang-btn.selected {
+            border-color: var(--selected-border);
+            background-color: #f7fee7;
+        }
+
+        .check-icon {
+            color: var(--selected-border);
+            font-weight: bold;
+            font-size: 14px;
+            display: none;
+        }
+
+        .lang-btn.selected .check-icon {
+            display: block;
+        }
+
+        /* --- Primary Action Button --- */
+        .primary-btn {
+            width: 100%;
+            background-color: var(--btn-green);
+            color: #14532d;
+            border: none;
+            border-radius: 8px;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-family: inherit;
+            margin-top: auto;
+            /* Pushes button to bottom if space allows */
+        }
+
+        .primary-btn:hover {
+            background-color: var(--btn-green-hover);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="plugin-container">
+        <header class="plugin-header">
+            <div class="brand">
+                <span class="logo-icons">🦜</span>
+                <h1 class="logo-text">BirdLingo</h1>
+                <span class="logo-icons">🐤</span>
+            </div>
+            <!-- <button class="close-btn" aria-label="Close" id="closePlugin">✕</button> -->
+        </header>
+
+        <main class="plugin-body">
+
+
+
+            <div class="language-grid">
+                <button class="lang-btn" data-lang="es">
+                    <div class="lang-info"><span class="flag">🇪🇸</span><span class="lang-name">Spanish</span></div>
+                    <span class="check-icon">✓</span>
+                </button>
+
+                <button class="lang-btn" data-lang="fr">
+                    <div class="lang-info"><span class="flag">🇫🇷</span><span class="lang-name">French</span></div>
+                    <span class="check-icon">✓</span>
+                </button>
+
+                <button class="lang-btn" data-lang="de">
+                    <div class="lang-info"><span class="flag">🇩🇪</span><span class="lang-name">German</span></div>
+                    <span class="check-icon">✓</span>
+                </button>
+
+                <button class="lang-btn" data-lang="zh">
+                    <div class="lang-info"><span class="flag">🇨🇳</span><span class="lang-name">Chinese</span></div>
+                    <span class="check-icon">✓</span>
+                </button>
+
+                <button class="lang-btn" data-lang="ko">
+                    <div class="lang-info"><span class="flag">🇰🇷</span><span class="lang-name">Korean</span></div>
+                    <span class="check-icon">✓</span>
+                </button>
+
+                <button class="lang-btn" data-lang="pt">
+                    <div class="lang-info"><span class="flag">🇵🇹</span><span class="lang-name">Portuguese</span></div>
+                    <span class="check-icon">✓</span>
+                </button>
+
+                <button class="lang-btn" data-lang="it">
+                    <div class="lang-info"><span class="flag">🇮🇹</span><span class="lang-name">Italian</span></div>
+                    <span class="check-icon">✓</span>
+                </button>
+
+                <button class="lang-btn" data-lang="ru">
+                    <div class="lang-info"><span class="flag">🇷🇺</span><span class="lang-name">Russian</span></div>
+                    <span class="check-icon">✓</span>
+                </button>
+            </div>
+
+            <button class="primary-btn" id="previewBtn">Preview Translation</button>
+
+        </main>
+    </div>
+
+    <script>
+        console.log("UI Loaded");
+
+        // Variable to keep track of the chosen language
+        let selectedLanguage = null;
+
+        // 1. Logic for selecting a language (highlighting only)
+        document.querySelectorAll("button[data-lang]").forEach(button => {
+            button.addEventListener("click", () => {
+
+                // Remove 'selected' class from all buttons
+                document.querySelectorAll(".lang-btn").forEach(btn => btn.classList.remove("selected"));
+
+                // Add 'selected' class to the clicked button
+                button.classList.add("selected");
+
+                // Save the language code to our variable
+                selectedLanguage = button.dataset.lang;
+            });
+        });
+
+        // 2. Logic for actually executing the translation
+        document.getElementById("previewBtn").addEventListener("click", () => {
+            // Check if the user has actually picked a language first
+            if (!selectedLanguage) {
+                alert("Please select a language first!");
+                return;
+            }
+
+            // Send the message to your Figma code.ts file
+            parent.postMessage(
+                { pluginMessage: { type: "TRANSLATE_FRAME", language: selectedLanguage } },
+                "*"
+            );
+        });
+
+        // 3. Your existing backend communication logic
+        window.onmessage = async (event) => {
+            const msg = event.data.pluginMessage;
+            if (!msg) return;
+
+            if (msg.type === "SEND_TO_BACKEND") {
+                try {
+                    const response = await fetch("http://localhost:3000/translate", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            texts: msg.texts,
+                            language: msg.language
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    parent.postMessage(
+                        { pluginMessage: { type: "TRANSLATED_TEXTS", texts: data.texts } },
+                        "*"
+                    );
+
+                } catch (err) {
+                    console.error(err);
+                    alert("Backend not running");
+                }
+            }
+        };
+    </script>
+</body>
+
+</html>

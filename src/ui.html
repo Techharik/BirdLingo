@@ -1,67 +1,101 @@
-<!DOCTYPE html>
-<html>
+<button id="extract">Extract Keys</button>
 
-<body>
+<div id="list"></div>
 
-    <h3>Select Language</h3>
+<h3>Select Languages</h3>
 
-    <button data-lang="es">Spanish</button>
-    <button data-lang="fr">French</button>
-    <button data-lang="de">German</button>
-    <button data-lang="zh">Chinese</button>
-    <button data-lang="ko">Korean</button>
-    <button data-lang="pt">Portuguese</button>
-    <button data-lang="it">Italian</button>
-    <button data-lang="ru">Russian</button>
+<label><input type="checkbox" value="en" checked /> English</label>
+<label><input type="checkbox" value="es" /> Spanish</label>
+<label><input type="checkbox" value="fr" /> French</label>
 
-    <script>
-        console.log("UI Loaded");
+<button id="download">Download JSON</button>
 
-        document.querySelectorAll("button").forEach(button => {
-            button.addEventListener("click", () => {
+<script>
+    let extracted = [];
 
-                const lang = button.dataset.lang;
+    document.getElementById("extract").onclick = () => {
+        parent.postMessage(
+            { pluginMessage: { type: "EXTRACT_KEYS" } },
+            "*"
+        );
+    };
 
-                parent.postMessage(
-                    { pluginMessage: { type: "TRANSLATE_FRAME", language: lang } },
-                    "*"
-                );
-            });
+    window.onmessage = (event) => {
+
+        const msg = event.data.pluginMessage;
+        if (!msg) return;
+
+        if (msg.type === "KEYS_RESULT") {
+
+            extracted = msg.data;
+            renderList();
+        }
+    };
+
+    function renderList() {
+        const container = document.getElementById("list");
+        container.innerHTML = "";
+
+        extracted.forEach((item, index) => {
+
+            const row = document.createElement("div");
+
+            row.innerHTML = `
+      <input value="${item.key}" data-index="${index}" class="key"/>
+      <input value="${item.text}" disabled/>
+      <button data-index="${index}" class="delete">X</button>
+    `;
+
+            container.appendChild(row);
         });
 
-        window.onmessage = async (event) => {
+        document.querySelectorAll(".delete").forEach(btn => {
+            btn.onclick = (e) => {
+                const i = e.target.dataset.index;
+                extracted.splice(i, 1);
+                renderList();
+            };
+        });
 
-            const msg = event.data.pluginMessage;
-            if (!msg) return;
+        document.querySelectorAll(".key").forEach(input => {
+            input.oninput = (e) => {
+                const i = e.target.dataset.index;
+                extracted[i].key = e.target.value;
+            };
+        });
+    }
 
-            if (msg.type === "SEND_TO_BACKEND") {
+    document.getElementById("download").onclick = () => {
 
-                try {
+        const languages = [...document.querySelectorAll("input[type=checkbox]:checked")]
+            .map(c => c.value);
 
-                    const response = await fetch("http://localhost:3000/translate", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            texts: msg.texts,
-                            language: msg.language
-                        })
-                    });
+        generateJSONFiles(extracted, languages);
+    };
 
-                    const data = await response.json();
+    function generateJSONFiles(items, languages) {
 
-                    parent.postMessage(
-                        { pluginMessage: { type: "TRANSLATED_TEXTS", texts: data.texts } },
-                        "*"
-                    );
+        languages.forEach(lang => {
 
-                } catch (err) {
-                    console.error(err);
-                    alert("Backend not running");
-                }
-            }
-        };
-    </script>
+            const json = {};
 
-</body>
+            items.forEach(item => {
+                json[item.key] = item.text; // later you replace with translated text
+            });
 
-</html>
+            downloadFile(`${lang}.json`, JSON.stringify(json, null, 2));
+        });
+    }
+
+    function downloadFile(filename, content) {
+        const blob = new Blob([content], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        a.click();
+
+        URL.revokeObjectURL(url);
+    }
+</script>

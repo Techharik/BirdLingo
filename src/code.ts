@@ -1,4 +1,4 @@
-figma.showUI(__html__, { width: 300, height: 200 });
+figma.showUI(__html__, { width: 600, height: 400 });
 
 let textNodes: TextNode[] = [];
 let clone: FrameNode | null = null;

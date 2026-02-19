@@ -6,10 +6,10 @@ export default defineConfig({
         target: "es2018",   // 🔥 IMPORTANT
 
         lib: {
-            entry: resolve(__dirname, "src/code.ts"),
+            entry: resolve(__dirname, "src/Bridge.ts"),
             formats: ["iife"],
             name: "code",
-            fileName: () => "code.js"
+            fileName: () => "Bridge.js"
         },
         rollupOptions: {
             external: []

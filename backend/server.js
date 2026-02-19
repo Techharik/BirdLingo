@@ -28,6 +28,7 @@ app.post("/translate", async (req, res) => {
         }
 
         res.json({ texts: translated });
+        console.log('completed')
 
     } catch (error) {
         console.error(error);

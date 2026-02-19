@@ -15,8 +15,8 @@
     "include": [
         "src",
         "env.d.ts",
-        "dist/ui.js",
-        "dist/code.js",
-        "dist/code.ts"
+        "BirdLingo/ui.js",
+        "BirdLingo/code.js",
+        "src/code.ts"
     ]
 }
