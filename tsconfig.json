@@ -1,12 +1,19 @@
 {
     "compilerOptions": {
-        "target": "ES6",
+        "target": "ESNext",
         "module": "ESNext",
+        "lib": [
+            "ESNext",
+            "DOM"
+        ],
         "types": [
             "@figma/plugin-typings"
         ],
-        "lib": [
-            "ES6"
-        ]
-    }
+        "moduleResolution": "Bundler",
+        "strict": true
+    },
+    "include": [
+        "src",
+        "env.d.ts"
+    ]
 }
