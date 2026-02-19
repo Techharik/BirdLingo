@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <h3>Extracted Text</h3>
+    <div id="result"></div>
+
+    <script>
+        onmessage = (event) => {
+            const msg = event.data.pluginMessage;
+
+            if (msg.type === "TEXT_RESULT") {
+                const container = document.getElementById("result");
+
+                container.innerHTML = msg.data
+                    .map(text => `<p>${text}</p>`)
+                    .join("");
+            }
+        };
+    </script>
+</body>
+
+</html>
