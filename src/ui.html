@@ -10,7 +10,7 @@
 
 <button id="download">Download JSON</button>
 
-<script>
+<script type="module">
     let extracted = [];
 
     document.getElementById("extract").onclick = () => {
@@ -73,17 +73,38 @@
         generateJSONFiles(extracted, languages);
     };
 
-    function generateJSONFiles(items, languages) {
+    async function generateJSONFiles(items, languages) {
 
         languages.forEach(lang => {
 
             const json = {};
 
-            items.forEach(item => {
-                json[item.key] = item.text; // later you replace with translated text
-            });
+            if (lang == "en") {
+                items.forEach(item => {
+                    json[item.key] = item.text; // later you replace with translated text
+                });
 
-            downloadFile(`${lang}.json`, JSON.stringify(json, null, 2));
+                downloadFile(`${lang}.json`, JSON.stringify(json, null, 2));
+            } else {
+                try {
+                    const response = await fetch("http://localhost:3000/translate", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(items)
+                    });
+
+                    const data = await response.json();
+
+                    items.forEach(item => {
+                        json[item.key] = item.text;
+                    });
+
+                } catch (err) {
+                    console.error(err);
+                    alert("Backend not running");
+                }
+                downloadFile(`${lang}.json`, JSON.stringify(json, null, 2));
+            }
         });
     }
 

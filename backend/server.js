@@ -35,6 +35,31 @@ app.post("/translate", async (req, res) => {
         res.status(500).json({ error: "Translation failed" });
     }
 });
+app.post("/translateObj", async (req, res) => {
+    console.log('Hitting api', req.body?.lang)
+    try {
+        const { obj, lang } = req.body;
+        console.log(obj, lang)
+
+        const translated = [];
+
+        // const content = await JSON.parse(obj)
+        // console.lof(content)
+        const result = await lingo.localizeObject(obj, {
+            sourceLocale: "en",
+            targetLocale: lang,
+        });
+        translated.push(result);
+
+
+        res.json({ texts: translated });
+        console.log('completed')
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Translation failed" });
+    }
+});
 
 app.listen(3000, () => {
     console.log("Server running on http://localhost:3000");
