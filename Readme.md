@@ -1,1 +1,1 @@
-![screenshot of Application](/assets/BirdLingo.png)
+![BirdLingo](assets/BirdLingo.png)
