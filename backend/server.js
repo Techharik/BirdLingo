@@ -16,7 +16,7 @@ app.post("/translate", async (req, res) => {
     console.log('Hitting api', req.body?.language)
     try {
         const { texts, language } = req.body;
-
+        console.log(texts)
         const translated = [];
 
         for (const text of texts) {

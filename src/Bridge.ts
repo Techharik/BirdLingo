@@ -1,60 +1,115 @@
-figma.showUI(__html__, { width: 500, height: 600 });
+figma.showUI(__html__, { width: 320, height: 180 });
+
+let textNodes: TextNode[] = [];
+let clone: FrameNode | null = null;
+let originalFrame: FrameNode | null = null;
 
 figma.ui.onmessage = async (msg) => {
 
-    if (msg.type === "EXTRACT_KEYS") {
+    // STEP 1 — Collect all text
+    if (msg.type === "START_TRANSLATION") {
 
         const selection = figma.currentPage.selection;
 
         if (!selection.length || selection[0].type !== "FRAME") {
-            figma.notify("Select a frame");
+            figma.notify("Select a frame first");
             return;
         }
 
-        const frame = selection[0] as FrameNode;
+        originalFrame = selection[0] as FrameNode;
+        clone = originalFrame.clone();
 
-        const result: { key: string; text: string }[] = [];
+        clone.x = originalFrame.x + originalFrame.width + 100;
+        clone.name = originalFrame.name + " (Translated)";
 
-        function collect(node: SceneNode, frameName: string) {
+        textNodes = [];
 
-            if (node.type === "TEXT") {
-
-                const key = `${sanitize(frameName)}.${sanitize(node.name)}`;
-
-                result.push({
-                    key,
-                    text: node.characters
-                });
-            }
-
-            if ("children" in node) {
-                node.children.forEach(child => collect(child, frameName));
-            }
+        function collect(node: SceneNode) {
+            if (node.type === "TEXT") textNodes.push(node);
+            if ("children" in node) node.children.forEach(collect);
         }
 
-        collect(frame, frame.name);
+        collect(clone);
 
         figma.ui.postMessage({
-            type: "KEYS_RESULT",
-            data: result
+            type: "NEED_TRANSLATION",
+            texts: textNodes.map(n => n.characters)
         });
     }
 
-    // When UI sends cleaned keys + selected languages
-    if (msg.type === "GENERATE_JSON") {
+    // STEP 2 — Apply translated text + Smart Resize
+    if (msg.type === "TRANSLATED_TEXTS" && clone && originalFrame) {
 
-        const { items, languages } = msg;
+        for (let i = 0; i < textNodes.length; i++) {
 
-        // items = cleaned list from UI
+            const node = textNodes[i];
 
-        figma.ui.postMessage({
-            type: "START_DOWNLOAD",
-            items,
-            languages
-        });
+            // 🔹 Load fonts safely
+            if (node.fontName === figma.mixed) {
+                const segments = node.getStyledTextSegments(["fontName"]);
+                for (const segment of segments) {
+                    await figma.loadFontAsync(segment.fontName);
+                }
+            } else {
+                await figma.loadFontAsync(node.fontName as FontName);
+            }
+
+            // 🔹 Store original size
+            const originalWidth = node.width;
+            const originalHeight = node.height;
+
+            // 🔹 Apply translation
+            node.characters = msg.texts[i];
+
+            // 🔹 Try height resize first
+            node.textAutoResize = "HEIGHT";
+            await new Promise(r => setTimeout(r, 0));
+
+            let isOverflowing = detectOverflow(node);
+
+            // 🔹 If still overflow → allow width expansion
+            if (isOverflowing) {
+                node.textAutoResize = "WIDTH_AND_HEIGHT";
+                await new Promise(r => setTimeout(r, 0));
+                isOverflowing = detectOverflow(node);
+            }
+
+            // 🔹 If STILL overflow → shrink font
+            if (isOverflowing && typeof node.fontSize === "number") {
+                let attempts = 0;
+
+                while (isOverflowing && attempts < 5) {
+                    node.fontSize = node.fontSize * 0.95;
+                    await new Promise(r => setTimeout(r, 0));
+                    isOverflowing = detectOverflow(node);
+                    attempts++;
+                }
+            }
+            console.log(isOverflowing)
+            // 🔹 Final visual state
+            node.fills = [{
+                type: "SOLID",
+                color: isOverflowing
+                    ? { r: 1, g: 0, b: 0 }   // red if still broken
+                    : { r: 0, g: 0, b: 0 }   // normal
+            }];
+        }
+
+        figma.notify("Smart Localization Complete ✅");
     }
 };
 
-function sanitize(name: string) {
-    return name.trim().replace(/\s+/g, "_").replace(/[^\w]/g, "");
+
+// 🔥 Real Overflow Detection
+function detectOverflow(node: TextNode): boolean {
+
+    const bounds = node.absoluteBoundingBox;
+    const parentBounds = node.parent?.absoluteBoundingBox;
+
+    if (!bounds || !parentBounds) return false;
+
+    return (
+        bounds.height > parentBounds.height ||
+        bounds.width > parentBounds.width
+    );
 }

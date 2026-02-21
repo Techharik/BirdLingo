@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+    <h3>Translate + Smart Resize</h3>
+    <button id="run">Run Translation</button>
+
+    <script>
+        document.getElementById("run").onclick = () => {
+            parent.postMessage(
+                { pluginMessage: { type: "START_TRANSLATION" } },
+                "*"
+            );
+        };
+
+        window.onmessage = async (event) => {
+            const msg = event.data.pluginMessage;
+            if (!msg) return;
+
+            if (msg.type === "NEED_TRANSLATION") {
+
+                try {
+                    const response = await fetch("http://localhost:3000/translate", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            texts: msg.texts,
+                            language: "es"
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    parent.postMessage(
+                        { pluginMessage: { type: "TRANSLATED_TEXTS", texts: data.texts } },
+                        "*"
+                    );
+
+                } catch (err) {
+                    alert("Backend not running");
+                    console.error(err);
+                }
+            }
+        };
+    </script>
+
+</body>
+
+</html>

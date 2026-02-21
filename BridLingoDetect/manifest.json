@@ -1,0 +1,10 @@
+{
+    "name": "BirdLingo Detect",
+    "id": "BirdLingo Detect",
+    "api": "1.0.0",
+    "editorType": [
+        "figma"
+    ],
+    "main": "Bridge.js",
+    "ui": "ui.html"
+}
