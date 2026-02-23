@@ -59,8 +59,23 @@ git clone https://github.com/Techharik/BirdLingo
 cd backend
 ---
 ```
-Add Env
+Add Env:
 
 ```bash
-cd backend
-env
+
+env 
+VITE_LINGODOTDEV_API_KEY=YOUR_SDK_ENV
+```
+Start the Serevr : 
+```bash
+node server.js
+```
+
+## Figma setup 
+
+- Open Figme right click and go for plugins ans select the development.
+![alt text](assets/figma2.png)
+- click on Import plugin from manifest 
+- select the manifest file from /Bridlingo folder for bridlingo
+-Select the manifest file form /BridLingoBridge folder for birdlingoBridge
+-Plugin runs in the developement
