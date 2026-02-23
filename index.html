@@ -1,12 +1,160 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <meta http-equiv="refresh" content="0; url=./web/main.html">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BirdLingo Suite | Hackathon Showcase</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono&display=swap');
+
+        body {
+            font-family: 'Space+Grotesk', sans-serif;
+            background-color: #0a0a0a;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .orange-glow {
+            color: #ff6b00;
+            text-shadow: 0 0 15px rgba(255, 107, 0, 0.4);
+        }
+
+        .green-glow {
+            color: #22c55e;
+            text-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+        }
+
+        .hack-border {
+            border: 2px solid #1a1a1a;
+            transition: all 0.3s ease;
+        }
+
+        .hack-border:hover {
+            border-color: #ff6b00;
+            box-shadow: 5px 5px 0px #22c55e;
+        }
+
+        .badge-soon {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            border: 1px solid #22c55e;
+        }
+    </style>
 </head>
 
-<body>
-    <p>Redirecting to BirdLingo Showcase...</p>
+<body class="text-slate-300">
+
+    <nav class="border-b-2 border-slate-900 bg-black sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <span class="bg-[#ff6b00] text-black font-black px-2 py-1 text-xl italic">BL</span>
+                <span class="mono font-bold text-white tracking-tighter">BIRDLINGO_LABS</span>
+            </div>
+            <div class="mono text-[10px] hidden md:block">
+                <span class="text-[#22c55e]">● SYSTEM_READY</span> | <span class="text-slate-500">BUILD_v2.0.26</span>
+            </div>
+        </div>
+    </nav>
+
+    <header class="py-20 px-6 max-w-7xl mx-auto border-x-2 border-slate-900">
+        <div class="mb-4 mono text-[#22c55e] font-bold tracking-widest uppercase text-sm">
+            // Project Submission: Global Design Tooling
+        </div>
+        <h1 class="text-6xl md:text-8xl font-bold text-white mb-8 leading-none">
+            Break the <span class="orange-glow italic">Language</span> Barrier.
+        </h1>
+        <p class="text-xl text-slate-400 max-w-2xl mono mb-10">
+            A suite of Figma tools engineered to automate localization, detect layout breaking-points, and bridge the
+            gap between design and code.
+        </p>
+        <div class="flex gap-4">
+            <div class="h-1 w-24 bg-[#ff6b00]"></div>
+            <div class="h-1 w-24 bg-[#22c55e]"></div>
+        </div>
+    </header>
+
+    <section class="max-w-7xl mx-auto px-6 pb-32 border-x-2 border-slate-900">
+        <div class="grid md:grid-cols-2 gap-8">
+
+            <div class="hack-border bg-[#0f0f0f] p-8 relative overflow-hidden group">
+                <div class="flex justify-between items-start mb-6">
+                    <i class="fa-solid fa-language text-4xl text-[#ff6b00]"></i>
+                    <span class="mono text-[10px] text-slate-500">PROJECT_01</span>
+                </div>
+                <h3 class="text-3xl font-bold text-white mb-2 uppercase">Birdlingo Translation</h3>
+                <p class="text-slate-400 mono text-sm mb-6 leading-relaxed">
+                    The core engine. Convert Figma screens into multiple languages instantly for localization previews.
+                </p>
+                <div class="flex gap-2">
+                    <span class="text-[10px] px-2 py-1 bg-white/5 border border-white/10 rounded uppercase">Live</span>
+                    <span class="text-[10px] px-2 py-1 bg-white/5 border border-white/10 rounded uppercase">Figma
+                        API</span>
+                </div>
+            </div>
+
+            <div class="hack-border bg-[#0f0f0f] p-8 relative group">
+                <div class="flex justify-between items-start mb-6">
+                    <i class="fa-solid fa-bridge text-4xl text-[#22c55e]"></i>
+                    <span class="mono text-[10px] text-slate-500">PROJECT_02</span>
+                </div>
+                <h3 class="text-3xl font-bold text-white mb-2 uppercase">Birdlingo Bridge</h3>
+                <p class="text-slate-400 mono text-sm mb-6 leading-relaxed">
+                    A JSON multilingual generator. Bridges the gap by turning design layers into production-ready i18n
+                    keys.
+                </p>
+                <div class="flex gap-2 text-[#22c55e] mono text-xs">
+                    <i class="fa-solid fa-check"></i> Functional Prototype
+                </div>
+            </div>
+
+            <div class="hack-border bg-[#0f0f0f]/50 p-8 opacity-70 group border-dashed">
+                <div class="flex justify-between items-start mb-6">
+                    <i
+                        class="fa-solid fa-triangle-exclamation text-4xl text-slate-500 group-hover:text-[#ff6b00] transition-colors"></i>
+                    <span class="badge-soon text-[10px] px-2 py-1 font-bold uppercase tracking-widest">Coming
+                        Soon</span>
+                </div>
+                <h3 class="text-3xl font-bold text-white mb-2 uppercase italic">Birdlingo Detect</h3>
+                <p class="text-slate-500 mono text-sm mb-6 leading-relaxed">
+                    Automated overflow highlighting. Scans your UI for text expansion issues in 40+ languages.
+                </p>
+            </div>
+
+            <div class="hack-border bg-[#0f0f0f]/50 p-8 opacity-70 group border-dashed">
+                <div class="flex justify-between items-start mb-6">
+                    <i
+                        class="fa-solid fa-table-cells text-4xl text-slate-500 group-hover:text-[#22c55e] transition-colors"></i>
+                    <span class="badge-soon text-[10px] px-2 py-1 font-bold uppercase tracking-widest">Coming
+                        Soon</span>
+                </div>
+                <h3 class="text-3xl font-bold text-white mb-2 uppercase italic">Birdlingo Grid View</h3>
+                <p class="text-slate-500 mono text-sm mb-6 leading-relaxed">
+                    Mass-generate images across different languages in a single grid layout for marketing assets.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="border-t-2 border-slate-900 py-10 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="mono text-xs">
+                <span class="text-[#ff6b00]">BUILD_LOG:</span> LingoDev Hack.
+            </div>
+            <div class="flex gap-6">
+                <a href="#" class="hover:text-[#ff6b00] transition-colors"><i
+                        class="fa-brands fa-github text-xl"></i></a>
+                <a href="#" class="hover:text-[#22c55e] transition-colors"><i
+                        class="fa-brands fa-discord text-xl"></i></a>
+            </div>
+        </div>
+    </footer>
+
 </body>
 
 </html>
