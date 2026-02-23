@@ -2,6 +2,7 @@
     "devDependencies": {
         "@figma/plugin-typings": "^1.123.0",
         "@types/node": "^25.3.0",
+        "gh-pages": "^6.3.0",
         "typescript": "^5.9.3",
         "vite": "^5.4.21",
         "vite-plugin-static-copy": "^3.2.0"
@@ -16,7 +17,8 @@
     "main": "code.js",
     "scripts": {
         "dev": "vite build --watch",
-        "build": "vite build"
+        "build": "vite build",
+        "deploy": "gh-pages -d web"
     },
     "keywords": [],
     "author": "",
