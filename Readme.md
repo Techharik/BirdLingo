@@ -3,10 +3,10 @@
 # 
 
 <p align="center">
-  <p align="center" color="orange">
+  <h1 align="center" color="orange">
          BirdLingo Labs: The Localization Suite
-  </p>
-  <strong align="center>Lingo.dev - Open-source i18n toolkit for LLM-powered localization</strong>
+  </h1>
+  <strong align="center">Lingo.dev - Open-source i18n toolkit for LLM-powered localization</strong>
 </p>
 
 ---
