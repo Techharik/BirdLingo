@@ -6,7 +6,7 @@
   <p align="center" color="orange">
          BirdLingo Labs: The Localization Suite
   </p>
-  <strong>Lingo.dev - Open-source i18n toolkit for LLM-powered localization</strong>
+  <strong align="center>Lingo.dev - Open-source i18n toolkit for LLM-powered localization</strong>
 </p>
 
 ---
