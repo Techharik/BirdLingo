@@ -4,21 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <style>
-        /* --- Global Styles & Variables --- */
         :root {
             --bg-dark: #0f172a;
-            /* Dark blue header */
+
             --bg-light: #ffffff;
-            /* Main body background */
+
             --brand-green: #a3e635;
-            /* Brand logo text color */
+
             --btn-green: #bbf7d0;
-            /* Primary button background */
+
             --btn-green-hover: #86efac;
             --border-color: #e2e8f0;
-            /* Standard border */
+
             --selected-border: #84cc16;
-            /* Selected state border */
+
             --text-dark: #1e293b;
             --text-muted: #64748b;
             --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -40,10 +39,10 @@
             margin: 0;
         }
 
-        /* --- Plugin Container --- */
+
         .plugin-container {
             width: 100%;
-            /* Adapts to Figma plugin window size */
+
             height: 100%;
             background-color: var(--bg-light);
             display: flex;
@@ -285,37 +284,35 @@
         // Variable to keep track of the chosen language
         let selectedLanguage = null;
 
-        // 1. Logic for selecting a language (highlighting only)
+
         document.querySelectorAll("button[data-lang]").forEach(button => {
             button.addEventListener("click", () => {
 
-                // Remove 'selected' class from all buttons
+
                 document.querySelectorAll(".lang-btn").forEach(btn => btn.classList.remove("selected"));
 
-                // Add 'selected' class to the clicked button
+
                 button.classList.add("selected");
 
-                // Save the language code to our variable
+
                 selectedLanguage = button.dataset.lang;
             });
         });
-
-        // 2. Logic for actually executing the translation
         document.getElementById("previewBtn").addEventListener("click", () => {
-            // Check if the user has actually picked a language first
+
             if (!selectedLanguage) {
                 alert("Please select a language first!");
                 return;
             }
 
-            // Send the message to your Figma code.ts file
+
             parent.postMessage(
                 { pluginMessage: { type: "TRANSLATE_FRAME", language: selectedLanguage } },
                 "*"
             );
         });
 
-        // 3. Your existing backend communication logic
+
         window.onmessage = async (event) => {
             const msg = event.data.pluginMessage;
             if (!msg) return;

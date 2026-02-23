@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <style>
-        /* --- Global Styles & Variables --- */
         :root {
             --bg-dark: #0f172a;
             --bg-light: #ffffff;
@@ -334,7 +333,7 @@
                 const row = document.createElement("div");
                 row.className = "key-row";
 
-                // Using UI input classes
+
                 row.innerHTML = `
           <input value="${item.key}" data-index="${index}" class="key key-input" placeholder="Enter key..."/>
           <input value="${item.text}" class="text-input" disabled title="${item.text}"/>
@@ -394,7 +393,6 @@
         }
 
         async function generateJSONFiles(items, languages) {
-            // Replaced forEach with for...of so await works correctly
             for (const lang of languages) {
                 const json = {};
 

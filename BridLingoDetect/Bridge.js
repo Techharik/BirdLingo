@@ -37,40 +37,35 @@
         } else {
           await figma.loadFontAsync(node.fontName);
         }
-        node.width;
-        node.height;
+        const originalHeight = node.height;
+        const originalWidth = node.width;
+        const originalFontSize = typeof node.fontSize === "number" ? node.fontSize : null;
         node.characters = msg.texts[i];
         node.textAutoResize = "HEIGHT";
         await new Promise((r) => setTimeout(r, 0));
-        let isOverflowing = detectOverflow(node);
-        if (isOverflowing) {
+        let overflow = node.height > originalHeight;
+        if (overflow) {
           node.textAutoResize = "WIDTH_AND_HEIGHT";
           await new Promise((r) => setTimeout(r, 0));
-          isOverflowing = detectOverflow(node);
+          overflow = node.height > originalHeight || node.width > originalWidth;
         }
-        if (isOverflowing && typeof node.fontSize === "number") {
+        if (overflow && originalFontSize) {
           let attempts = 0;
-          while (isOverflowing && attempts < 5) {
+          while (attempts < 6 && (node.height > originalHeight || node.width > originalWidth)) {
             node.fontSize = node.fontSize * 0.95;
             await new Promise((r) => setTimeout(r, 0));
-            isOverflowing = detectOverflow(node);
             attempts++;
           }
+          overflow = node.height > originalHeight || node.width > originalWidth;
         }
+        console.log("Overflow:", node.name, overflow);
         node.fills = [{
           type: "SOLID",
-          color: isOverflowing ? { r: 1, g: 0, b: 0 } : { r: 0, g: 0, b: 0 }
+          color: overflow ? { r: 1, g: 0, b: 0 } : { r: 0, g: 0, b: 0 }
           // normal
         }];
       }
       figma.notify("Smart Localization Complete ✅");
     }
   };
-  function detectOverflow(node) {
-    var _a;
-    const bounds = node.absoluteBoundingBox;
-    const parentBounds = (_a = node.parent) == null ? void 0 : _a.absoluteBoundingBox;
-    if (!bounds || !parentBounds) return false;
-    return bounds.height > parentBounds.height || bounds.width > parentBounds.width;
-  }
 })();

@@ -6,7 +6,7 @@ let originalFrame: FrameNode | null = null;
 
 figma.ui.onmessage = async (msg) => {
 
-    // STEP 1 — Collect all text
+    // STEP 1 — Collect all text nodes
     if (msg.type === "START_TRANSLATION") {
 
         const selection = figma.currentPage.selection;
@@ -37,7 +37,7 @@ figma.ui.onmessage = async (msg) => {
         });
     }
 
-    // STEP 2 — Apply translated text + Smart Resize
+    // STEP 2 — Apply translation + Smart Resize
     if (msg.type === "TRANSLATED_TEXTS" && clone && originalFrame) {
 
         for (let i = 0; i < textNodes.length; i++) {
@@ -54,62 +54,63 @@ figma.ui.onmessage = async (msg) => {
                 await figma.loadFontAsync(node.fontName as FontName);
             }
 
-            // 🔹 Store original size
-            const originalWidth = node.width;
+            // 🔹 Store original dimensions
             const originalHeight = node.height;
+            const originalWidth = node.width;
+            const originalFontSize =
+                typeof node.fontSize === "number" ? node.fontSize : null;
 
-            // 🔹 Apply translation
+            // 🔹 Apply translated text
             node.characters = msg.texts[i];
 
             // 🔹 Try height resize first
             node.textAutoResize = "HEIGHT";
             await new Promise(r => setTimeout(r, 0));
 
-            let isOverflowing = detectOverflow(node);
+            let overflow =
+                node.height > originalHeight;
 
-            // 🔹 If still overflow → allow width expansion
-            if (isOverflowing) {
+            // 🔹 If still constrained, try width expansion
+            if (overflow) {
                 node.textAutoResize = "WIDTH_AND_HEIGHT";
                 await new Promise(r => setTimeout(r, 0));
-                isOverflowing = detectOverflow(node);
+
+                overflow =
+                    node.height > originalHeight ||
+                    node.width > originalWidth;
             }
 
-            // 🔹 If STILL overflow → shrink font
-            if (isOverflowing && typeof node.fontSize === "number") {
+            // 🔹 If STILL too big → shrink font
+            if (overflow && originalFontSize) {
+
                 let attempts = 0;
 
-                while (isOverflowing && attempts < 5) {
+                while (
+                    attempts < 6 &&
+                    (node.height > originalHeight ||
+                        node.width > originalWidth)
+                ) {
                     node.fontSize = node.fontSize * 0.95;
                     await new Promise(r => setTimeout(r, 0));
-                    isOverflowing = detectOverflow(node);
                     attempts++;
                 }
+
+                overflow =
+                    node.height > originalHeight ||
+                    node.width > originalWidth;
             }
-            console.log(isOverflowing)
-            // 🔹 Final visual state
+
+            console.log("Overflow:", node.name, overflow);
+
+            // 🔹 Final visual indicator
             node.fills = [{
                 type: "SOLID",
-                color: isOverflowing
-                    ? { r: 1, g: 0, b: 0 }   // red if still broken
-                    : { r: 0, g: 0, b: 0 }   // normal
+                color: overflow
+                    ? { r: 1, g: 0, b: 0 }  // red if broken
+                    : { r: 0, g: 0, b: 0 }  // normal
             }];
         }
 
         figma.notify("Smart Localization Complete ✅");
     }
 };
-
-
-// 🔥 Real Overflow Detection
-function detectOverflow(node: TextNode): boolean {
-
-    const bounds = node.absoluteBoundingBox;
-    const parentBounds = node.parent?.absoluteBoundingBox;
-
-    if (!bounds || !parentBounds) return false;
-
-    return (
-        bounds.height > parentBounds.height ||
-        bounds.width > parentBounds.width
-    );
-}
